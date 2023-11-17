@@ -7,36 +7,40 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
 import com.example.orgs.dao.ProdutosDAO
+import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.model.Produto
 import java.math.BigDecimal
+import java.util.zip.Inflater
 
-class FormularioProdutoActivity :
-    AppCompatActivity(R.layout.activity_formulario_produto) {
+class FormularioProdutoActivity : AppCompatActivity() {
+
+    private val binding by lazy {
+        ActivityFormularioProdutoBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         configuraBotaoSalvar()
     }
 
     private fun configuraBotaoSalvar() {
-        val botaoSalvar = findViewById<Button>(R.id.activity_formulario_produto_botao_salvar)
+        val botaoSalvar = binding.activityFormularioProdutoBotaoSalvar
         val dao = ProdutosDAO()
 
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            Log.i("FormularioProduto", "$produtoNovo")
             dao.adicionar(produtoNovo)
-            Log.i("FormularioProduto", "${dao.buscaTodos()}")
             finish()
         }
     }
 
     private fun criaProduto(): Produto {
-        val campoNome = findViewById<EditText>(R.id.activity_formulario_produto_nome)
+        val campoNome = binding.activityFormularioProdutoNome
         val nome = campoNome.text.toString()
-        val campoDescricao = findViewById<EditText>(R.id.activity_formulario_produto_descricao)
+        val campoDescricao = binding.activityFormularioProdutoDescricao
         val descricao = campoDescricao.text.toString()
-        val campoValor = findViewById<EditText>(R.id.activity_formulario_produto_valor)
+        val campoValor = binding.activityFormularioProdutoValor
         val valorEmTexto = campoValor.text.toString()
         val valor = if (valorEmTexto.isBlank()) {
             BigDecimal.ZERO
@@ -44,10 +48,6 @@ class FormularioProdutoActivity :
             BigDecimal(valorEmTexto)
         }
 
-        return Produto(
-            nome = nome,
-            descricao = descricao,
-            valor = valor
-        )
+        return Produto(nome = nome, descricao = descricao, valor = valor)
     }
 }
