@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
 import com.example.orgs.dao.ProdutosDAO
@@ -22,6 +23,13 @@ class FormularioProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraBotaoSalvar()
+        binding.activityFormularioProdutoImagem.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setView(R.layout.formulario_imagem)
+                .setPositiveButton("confirmar")  { _, _ ->  }
+                .setNegativeButton("Cancelar") { _, _ ->  }
+                .show()
+        }
     }
 
     private fun configuraBotaoSalvar() {
