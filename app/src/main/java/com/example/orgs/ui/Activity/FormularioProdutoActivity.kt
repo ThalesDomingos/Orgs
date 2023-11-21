@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.example.orgs.dao.ProdutosDAO
+import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.extensions.tentaCarregarImagem
 import com.example.orgs.model.Produto
@@ -40,17 +40,17 @@ class FormularioProdutoActivity : AppCompatActivity() {
                 .mostra(url) { imagem ->
                     url = imagem
                     binding.activityFormularioProdutoImagem.tentaCarregarImagem(url)
-            }
+                }
         }
     }
 
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.activityFormularioProdutoBotaoSalvar
-        val dao = ProdutosDAO()
-
+        val db = AppDatabase.instancia(this)
+        val produtoDao = db.produtoDao()
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            dao.adicionar(produtoNovo)
+            produtoDao.salva(produtoNovo)
             finish()
         }
     }

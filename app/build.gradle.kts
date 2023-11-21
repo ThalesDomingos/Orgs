@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -40,6 +41,11 @@ android {
 }
 
 dependencies {
+    val roomVersion = "2.3.0"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
 
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.core:core-ktx:1.9.0")
@@ -52,5 +58,7 @@ dependencies {
 
     implementation ("io.coil-kt:coil:1.2.2")
     implementation("io.coil-kt:coil-gif:1.2.2")
+
+
 }
 
