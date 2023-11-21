@@ -7,6 +7,7 @@ import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.orgs.database.AppDatabase
+import com.example.orgs.database.dao.ProdutoDao
 import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.extensions.tentaCarregarImagem
 import com.example.orgs.model.Produto
@@ -18,8 +19,12 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
-
+    private val produtoDao : ProdutoDao by lazy {
+        val db = AppDatabase.instancia(this)
+        db.produtoDao()
+    }
     private var url: String? = null
+    private var produtoId = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +47,41 @@ class FormularioProdutoActivity : AppCompatActivity() {
                     binding.activityFormularioProdutoImagem.tentaCarregarImagem(url)
                 }
         }
+        tentaCarregarProduto()
+
+    }
+
+    private fun tentaCarregarProduto() {
+        produtoId = intent.getLongExtra(CHAVE_PRODUTO_ID, 0L)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tentaBuscar()
+    }
+
+    private fun tentaBuscar() {
+        produtoDao.buscaPorId(produtoId)?.let {
+            title = "Alterar produto"
+            preencheCampos(it)
+        }
+    }
+
+    private fun preencheCampos(produto: Produto) {
+
+        url = produto.imagem
+        binding.activityFormularioProdutoImagem.tentaCarregarImagem(produto.imagem)
+        binding.activityFormularioProdutoNome
+            .setText(produto.nome)
+        binding.activityFormularioProdutoDescricao
+            .setText(produto.descricao)
+        binding.activityFormularioProdutoValor
+            .setText(produto.valor.toPlainString())
     }
 
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.activityFormularioProdutoBotaoSalvar
-        val db = AppDatabase.instancia(this)
-        val produtoDao = db.produtoDao()
+
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
             produtoDao.salva(produtoNovo)
@@ -68,6 +102,11 @@ class FormularioProdutoActivity : AppCompatActivity() {
             BigDecimal(valorEmTexto)
         }
 
-        return Produto(nome = nome, descricao = descricao, valor = valor, imagem = url)
+        return Produto(
+            id = produtoId,
+            nome = nome,
+            descricao = descricao,
+            valor = valor,
+            imagem = url)
     }
 }

@@ -2,8 +2,10 @@ package com.example.orgs.ui.recyclerview.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.orgs.R
@@ -17,13 +19,16 @@ import java.util.Locale
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto> = emptyList(), var quandoClicaNoItem: (produto: Produto) -> Unit = {}
-            ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
+    produtos: List<Produto> = emptyList(),
+    var quandoClicaNoItem: (produto: Produto) -> Unit = {},
+    var quandoClicaEmEditar: (produto: Produto) -> Unit = {},
+    var quandoClicaEmApagar: (produto: Produto) -> Unit = {}
+) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
 
     inner class ViewHolder(private val binding: ProdutoItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
 
         private lateinit var produto: Produto
 
@@ -32,6 +37,16 @@ class ListaProdutosAdapter(
                 if(::produto.isInitialized){
                     quandoClicaNoItem(produto)
                 }
+            }
+        }
+
+        init {
+            itemView.setOnLongClickListener {
+                PopupMenu(context, itemView).apply {
+                    menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
+                    setOnMenuItemClickListener(this@ViewHolder)
+                } .show()
+                true
             }
         }
 
@@ -53,6 +68,22 @@ class ListaProdutosAdapter(
             binding.imageView.visibility = visibilidade
 
             binding.imageView.tentaCarregarImagem(produto.imagem)
+        }
+
+        override fun onMenuItemClick(item: MenuItem?): Boolean {
+            item?.let {
+                when (it.itemId) {
+                    R.id.menu_detalhes_produto_editar -> {
+                        quandoClicaEmEditar
+                    }
+                    R.id.menu_detalhes_produto_apagar -> {
+                        quandoClicaEmApagar
+                    }
+
+                    else -> {}
+                }
+            }
+            return true
         }
 
     }
