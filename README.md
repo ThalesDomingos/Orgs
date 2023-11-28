@@ -1,6 +1,6 @@
 # Orgs
+
 Android com Kotlin
-App de simulação de um e-commerce de produtos naturais.
 
 ## 🔨 Funcionalidades do projeto
 
