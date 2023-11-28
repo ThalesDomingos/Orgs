@@ -8,9 +8,8 @@ O projeto permite acessar a tela de login, cadastro, autenticação de usuário,
 
 ![Amostra das funcionalidades do App](https://user-images.githubusercontent.com/8989346/145200235-342f5f66-451a-4150-9f52-94e2385a7d9c.gif) ![img5_01](https://user-images.githubusercontent.com/8989346/147489725-9533d33b-e1d5-4055-ba69-b6e10ab0f55b.gif) 
 
-## ✔️ Técnicas e tecnologias utilizadas
+## ✔️ Técnicas aplicadas e tecnologias no projeto
 
-- `Técnicas e tecnologias no projeto`
 - `Kotlin`
 - `Layout para Activities`
 - `ConstraintLayout`
